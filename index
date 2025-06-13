@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aula Interativa: Ferramentas de Produtividade</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals -->
+    <!-- Application Structure Plan: A single-page application with a sticky top navigation for jumping between five core learning sections: Text Editors, Spreadsheets, Charts, AI & Content Creation, and Digital Security. A final interactive Quiz section provides self-assessment. A language switcher (PT/ES) in the header allows users to dynamically change all content on the page. This structure was chosen because it represents a logical progression of digital skills, from fundamental tools to advanced topics and critical security knowledge. Each section is self-contained yet contributes to a holistic understanding of digital productivity, enhancing user engagement and knowledge retention over a static presentation. -->
+    <!-- Visualization & Content Choices: The application uses styled HTML/Tailwind for textual content, step-by-step guides, and lists, providing a clean and readable format. For data visualization (Goal: Demonstrate Charting), a Chart.js bar chart is implemented to show monthly sales, making the concept tangible and dynamic. For assessment (Goal: Test Knowledge), an interactive quiz is built with HTML forms and Vanilla JS. It provides immediate feedback by highlighting correct/incorrect answers and showing a final score, which is a highly effective learning interaction. All interactions are designed to support the educational flow and comprehensive understanding of the added topics. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .active-lang { background-color: #3b82f6; color: white; }
+        .nav-link.active { color: #3b82f6; border-bottom-color: #3b82f6; }
+        html { scroll-behavior: smooth; }
+        .quiz-option.correct { background-color: #dcfce7; border-color: #22c55e; }
+        .quiz-option.incorrect { background-color: #fee2e2; border-color: #ef4444; }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <header class="bg-white/80 backdrop-blur-lg shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center max-w-6xl">
+            <h1 class="text-xl md:text-2xl font-bold text-gray-700">
+                <span data-lang="pt">Aula Interativa</span>
+                <span data-lang="es">Clase Interactiva</span>
+            </h1>
+            <div class="flex items-center space-x-2 md:space-x-8">
+                <nav class="hidden md:flex space-x-6">
+                    <a href="#section-text" class="nav-link text-gray-600 font-semibold hover:text-blue-500 border-b-2 border-transparent pb-1">
+                        <span data-lang="pt">Editor de Texto</span>
+                        <span data-lang="es">Editor de Texto</span>
+                    </a>
+                    <a href="#section-sheets" class="nav-link text-gray-600 font-semibold hover:text-blue-500 border-b-2 border-transparent pb-1">
+                        <span data-lang="pt">Planilhas</span>
+                        <span data-lang="es">Hojas de Cálculo</span>
+                    </a>
+                    <a href="#section-charts" class="nav-link text-gray-600 font-semibold hover:text-blue-500 border-b-2 border-transparent pb-1">
+                        <span data-lang="pt">Gráficos</span>
+                        <span data-lang="es">Gráficos</span>
+                    </a>
+                    <a href="#section-ai" class="nav-link text-gray-600 font-semibold hover:text-blue-500 border-b-2 border-transparent pb-1">
+                        <span data-lang="pt">IA & Conteúdo</span>
+                        <span data-lang="es">IA & Contenido</span>
+                    </a>
+                    <a href="#section-security" class="nav-link text-gray-600 font-semibold hover:text-blue-500 border-b-2 border-transparent pb-1">
+                        <span data-lang="pt">Segurança Digital</span>
+                        <span data-lang="es">Seguridad Digital</span>
+                    </a>
+                    <a href="#section-quiz" class="nav-link text-gray-600 font-semibold hover:text-blue-500 border-b-2 border-transparent pb-1">Quiz</a>
+                </nav>
+                <div class="flex border border-gray-300 rounded-lg overflow-hidden text-sm">
+                    <button id="lang-pt" class="px-3 py-1 font-semibold">PT</button>
+                    <button id="lang-es" class="px-3 py-1 font-semibold">ES</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8 md:py-12 max-w-5xl">
+
+        <!-- Seção 1: Editores de Texto -->
+        <section id="section-text" class="mb-16">
+            <div data-lang="pt">
+                <h2 class="text-3xl font-bold mb-2 text-blue-600">Seção 1: Dominando Editores de Texto</h2>
+                <p class="mb-6 text-lg text-gray-600">Explore as ferramentas essenciais para criar e formatar documentos de maneira profissional. Desde a formatação básica até recursos avançados como sumários automáticos, esta seção cobre tudo o que você precisa saber.</p>
+            </div>
+            <div data-lang="es">
+                <h2 class="text-3xl font-bold mb-2 text-blue-600">Sección 1: Dominando los Editores de Texto</h2>
+                <p class="mb-6 text-lg text-gray-600">Explora las herramientas esenciales para crear y formatear documentos de manera profesional. Desde el formato básico hasta funciones avanzadas como tablas de contenido automáticas, esta sección cubre todo lo que necesitas saber.</p>
+            </div>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <h3 class="font-bold text-xl mb-4">
+                        <span data-lang="pt">Recursos Essenciais</span>
+                        <span data-lang="es">Funcionalidades Esenciales</span>
+                    </h3>
+                    <ul class="space-y-3 list-disc list-inside text-gray-700">
+                        <li><b data-lang="pt">Formatação:</b><b data-lang="es">Formato:</b><span data-lang="pt"> Fonte, cor, tamanho, alinhamento.</span><span data-lang="es"> Fuente, color, tamaño, alineación.</span></li>
+                        <li><b data-lang="pt">Listas:</b><b data-lang="es">Listas:</b><span data-lang="pt"> Organização com marcadores e numeração.</span><span data-lang="es"> Organización con viñetas y numeración.</span></li>
+                        <li><b data-lang="pt">Estilos:</b><b data-lang="es">Estilos:</b><span data-lang="pt"> Consistência visual para títulos e textos.</span><span data-lang="es"> Consistencia visual para títulos y textos.</span></li>
+                        <li><b data-lang="pt">Inserção de Elementos:</b><b data-lang="es">Inserción de Elementos:</b><span data-lang="pt"> Adicione imagens, tabelas e links.</span><span data-lang="es"> Añade imágenes, tablas y enlaces.</span></li>
+                        <li><b data-lang="pt">Revisão:</b><b data-lang="es">Revisión:</b><span data-lang="pt"> Ferramentas de correção ortográfica.</span><span data-lang="es"> Herramientas de corrección ortográfica.</span></li>
+                    </ul>
+                </div>
+                 <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <h3 class="font-bold text-xl mb-4">
+                        <span data-lang="pt">Demonstração: Formatação Básica</span>
+                        <span data-lang="es">Demostración: Formato Básico</span>
+                    </h3>
+                    <ol class="space-y-2 list-decimal list-inside text-gray-700">
+                        <li><b data-lang="pt">Selecione o texto</b><b data-lang="es">Selecciona el texto</b><span data-lang="pt"> que deseja formatar.</span><span data-lang="es"> que deseas formatear.</span></li>
+                        <li><b data-lang="pt">Use a barra de ferramentas</b><b data-lang="es">Usa la barra de herramientas</b><span data-lang="pt"> para aplicar negrito, itálico ou cor.</span><span data-lang="es"> para aplicar negrita, cursiva o color.</span></li>
+                        <li><b data-lang="pt">Altere o tamanho da fonte</b><b data-lang="es">Cambia el tamaño de la fuente</b><span data-lang="pt"> no menu suspenso.</span><span data-lang="es"> en el menú desplegable.</span></li>
+                        <li><b data-lang="pt">Ajuste o alinhamento</b><b data-lang="es">Ajusta la alineación</b><span data-lang="pt"> (esquerda, centro, direita).</span><span data-lang="es"> (izquierda, centro, derecha).</span></li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção 2: Editores de Planilhas -->
+        <section id="section-sheets" class="mb-16">
+             <div data-lang="pt">
+                <h2 class="text-3xl font-bold mb-2 text-blue-600">Seção 2: Desvendando Planilhas</h2>
+                <p class="mb-6 text-lg text-gray-600">Aprenda a organizar e analisar dados de forma eficiente. Descubra o poder das fórmulas, funções e formatação condicional para transformar dados brutos em insights valiosos.</p>
+            </div>
+            <div data-lang="es">
+                <h2 class="text-3xl font-bold mb-2 text-blue-600">Sección 2: Descubriendo las Hojas de Cálculo</h2>
+                <p class="mb-6 text-lg text-gray-600">Aprende a organizar y analizar datos de forma eficiente. Descubre el poder de las fórmulas, funciones y el formato condicional para transformar datos brutos en información valiosa.</p>
+            </div>
+             <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <h3 class="font-bold text-xl mb-4">
+                        <span data-lang="pt">Fórmulas e Funções Populares</span>
+                        <span data-lang="es">Fórmulas y Funciones Populares</span>
+                    </h3>
+                    <ul class="space-y-3 text-gray-700">
+                        <li><code class="bg-gray-200 px-2 py-1 rounded text-sm font-mono">=SOMA(A1:A10)</code><span data-lang="pt"> / </span><code class="bg-gray-200 px-2 py-1 rounded text-sm font-mono">SUM()</code><span data-lang="pt"> - Soma valores.</span><span data-lang="es"> - Suma valores.</span></li>
+                        <li><code class="bg-gray-200 px-2 py-1 rounded text-sm font-mono">=MÉDIA(B1:B10)</code><span data-lang="pt"> / </span><code class="bg-gray-200 px-2 py-1 rounded text-sm font-mono">PROMEDIO()</code><span data-lang="pt"> - Calcula a média.</span><span data-lang="es"> - Calcula el promedio.</span></li>
+                        <li><code class="bg-gray-200 px-2 py-1 rounded text-sm font-mono">=SE(C1>100;"Alto";"Baixo")</code><span data-lang="pt"> / </span><code class="bg-gray-200 px-2 py-1 rounded text-sm font-mono">SI()</code><span data-lang="pt"> - Lógica condicional.</span><span data-lang="es"> - Lógica condicional.</span></li>
+                    </ul>
+                </div>
+                 <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <h3 class="font-bold text-xl mb-4">
+                        <span data-lang="pt">Demonstração: Formatação Condicional</span>
+                        <span data-lang="es">Demostración: Formato Condicional</span>
+                    </h3>
+                    <ol class="space-y-2 list-decimal list-inside text-gray-700">
+                        <li><b data-lang="pt">Selecione as células</b><b data-lang="es">Selecciona las celdas</b><span data-lang="pt"> com os dados.</span><span data-lang="es"> con los datos.</span></li>
+                        <li><span data-lang="pt">Vá em </span><b data-lang="pt">Formatar > Formatação condicional</b><span data-lang="pt">.</span><span data-lang="es">Ve a </span><b data-lang="es">Formato > Formato condicional</b><span data-lang="es">.</span></li>
+                        <li><b data-lang="pt">Defina uma regra</b><b data-lang="es">Define una regla</b><span data-lang="pt"> (ex: "É maior que 100").</span><span data-lang="es"> (ej: "Es maior que 100").</span></li>
+                        <li><b data-lang="pt">Escolha um estilo de formatação</b><b data-lang="es">Elige un estilo de formato</b><span data-lang="pt"> (cor de fundo, etc.).</span><span data-lang="es"> (color de fondo, etc.).</span></li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção 3: Criação de Gráficos -->
+        <section id="section-charts" class="mb-16">
+            <div data-lang="pt">
+                <h2 class="text-3xl font-bold mb-2 text-blue-600">Seção 3: Visualização de Dados com Gráficos</h2>
+                <p class="mb-6 text-lg text-gray-600">Transforme números em histórias visuais. Aprenda a escolher o tipo de gráfico certo para seus dados e a personalizá-lo para comunicar sua mensagem com clareza e impacto.</p>
+            </div>
+            <div data-lang="es">
+                 <h2 class="text-3xl font-bold mb-2 text-blue-600">Sección 3: Visualización de Datos con Gráficos</h2>
+                <p class="mb-6 text-lg text-gray-600">Transforma números en historias visuales. Aprende a elegir el tipo de gráfico correcto para tus datos y a personalizarlo para comunicar tu mensaje con claridad e impacto.</p>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-lg">
+                <h3 class="font-bold text-xl mb-4 text-center">
+                    <span data-lang="pt">Exemplo Interativo: Vendas Mensais</span>
+                    <span data-lang="es">Ejemplo Interactivo: Ventas Mensuales</span>
+                </h3>
+                <div class="chart-container">
+                    <canvas id="salesChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção 4: IA e Criação de Conteúdo -->
+        <section id="section-ai" class="mb-16">
+            <div data-lang="pt">
+                <h2 class="text-3xl font-bold mb-2 text-blue-600">Seção 4: IA e Criação de Conteúdo</h2>
+                <p class="mb-6 text-lg text-gray-600">Descubra como a Inteligência Artificial pode revolucionar a forma como você cria conteúdo, desde a geração de ideias até a otimização de textos, e aprenda a dominar a arte de escrever prompts eficazes.</p>
+            </div>
+            <div data-lang="es">
+                <h2 class="text-3xl font-bold mb-2 text-blue-600">Sección 4: IA y Creación de Contenido</h2>
+                <p class="mb-6 text-lg text-gray-600">Descubre cómo la Inteligencia Artificial puede revolucionar la forma en que creas contenido, desde la generación de ideas hasta la optimización de textos, y aprende a dominar el arte de escribir prompts efectivos.</p>
+            </div>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <h3 class="font-bold text-xl mb-4">
+                        <span data-lang="pt">Como a IA Auxilia na Criação de Conteúdo</span>
+                        <span data-lang="es">Cómo la IA Ayuda en la Creación de Contenido</span>
+                    </h3>
+                    <ul class="space-y-3 list-disc list-inside text-gray-700">
+                        <li><b data-lang="pt">Geração de Ideias:</b><b data-lang="es">Generación de Ideas:</b><span data-lang="pt"> Brainstorming e tópicos.</span><span data-lang="es"> Brainstorming y temas.</span></li>
+                        <li><b data-lang="pt">Redação de Rascunhos:</b><b data-lang="es">Redacción de Borradores:</b><span data-lang="pt"> Textos iniciais e estruturas.</span><span data-lang="es"> Textos iniciales y estructuras.</span></li>
+                        <li><b data-lang="pt">Resumos e Traduções:</b><b data-lang="es">Resúmenes y Traducciones:</b><span data-lang="pt"> Síntese e adaptação.</span><span data-lang="es"> Síntesis y adaptación.</span></li>
+                        <li><b data-lang="pt">Otimização de Textos:</b><b data-lang="es">Optimización de Textos:</b><span data-lang="pt"> Melhoria de clareza e tom.</span><span data-lang="es"> Mejora de claridad y tono.</span></li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <h3 class="font-bold text-xl mb-4">
+                        <span data-lang="pt">Prompts: A Chave para a IA</span>
+                        <span data-lang="es">Prompts: La Clave de la IA</span>
+                    </h3>
+                    <p class="mb-4 text-gray-700">
+                        <span data-lang="pt">Prompts são instruções que você dá à inteligência artificial para gerar um resultado. A qualidade do prompt determina a qualidade da resposta da IA.</span>
+                        <span data-lang="es">Los prompts son instrucciones que le das a la inteligencia artificial para generar un resultado. La calidad del prompt determina la calidad de la respuesta de la IA.</span>
+                    </p>
+                    <h4 class="font-semibold mb-2">
+                        <span data-lang="pt">Demonstração: Escrevendo um Bom Prompt</span>
+                        <span data-lang="es">Demostración: Escribiendo un Buen Prompt</span>
+                    </h4>
+                    <ol class="space-y-2 list-decimal list-inside text-gray-700">
+                        <li><b data-lang="pt">Seja claro e específico:</b><b data-lang="es">Sé claro y específico:</b><span data-lang="pt"> "Crie um email de agradecimento para um cliente que comprou um produto."</span><span data-lang="es"> "Crea un correo electrónico de agradecimiento para un cliente que compró un producto."</span></li>
+                        <li><b data-lang="pt">Defina o formato:</b><b data-lang="es">Define el formato:</b><span data-lang="pt"> "Em formato de lista."</span><span data-lang="es"> "En formato de lista."</span></li>
+                        <li><b data-lang="pt">Forneça contexto:</b><b data-lang="es">Proporciona contexto:</b><span data-lang="pt"> "O produto é um e-book sobre marketing digital."</span><span data-lang="es"> "El producto es un e-book sobre marketing digital."</span></li>
+                        <li><b data-lang="pt">Especifique a persona:</b><b data-lang="es">Especifica la persona:</b><span data-lang="pt"> "Com um tom amigável e profissional."</span><span data-lang="es"> "Con un tono amigable y profesional."</span></li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção 5: Segurança Digital e Competências -->
+        <section id="section-security" class="mb-16">
+            <div data-lang="pt">
+                <h2 class="text-3xl font-bold mb-2 text-blue-600">Seção 5: Segurança Digital e Competências</h2>
+                <p class="mb-6 text-lg text-gray-600">A segurança da informação é crucial no mundo digital. Nesta seção, vamos explorar os pilares da segurança digital e as melhores práticas para proteger seus dados e sua privacidade online, fortalecendo suas competências digitais.</p>
+            </div>
+            <div data-lang="es">
+                <h2 class="text-3xl font-bold mb-2 text-blue-600">Sección 5: Seguridad Digital y Competencias</h2>
+                <p class="mb-6 text-lg text-gray-600">La seguridad de la información es crucial en el mundo digital. En esta sección, exploraremos los pilares de la seguridad digital y las mejores prácticas para proteger tus datos y tu privacidad en línea, fortaleciendo tus competencias digitales.</p>
+            </div>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <h3 class="font-bold text-xl mb-4">
+                        <span data-lang="pt">Pilares da Segurança da Informação</span>
+                        <span data-lang="es">Pilares de la Seguridad de la Información</span>
+                    </h3>
+                    <ul class="space-y-3 list-disc list-inside text-gray-700">
+                        <li><b data-lang="pt">Confidencialidade:</b><b data-lang="es">Confidencialidad:</b><span data-lang="pt"> Apenas usuários autorizados podem acessar dados.</span><span data-lang="es"> Solo usuarios autorizados pueden acceder a los datos.</span></li>
+                        <li><b data-lang="pt">Integridade:</b><b data-lang="es">Integridad:</b><span data-lang="pt"> Dados são precisos e protegidos contra modificações não autorizadas.</span><span data-lang="es"> Los datos son precisos y están protegidos contra modificaciones no autorizadas.</span></li>
+                        <li><b data-lang="pt">Disponibilidade:</b><b data-lang="es">Disponibilidad:</b><span data-lang="pt"> Dados e sistemas estão acessíveis quando necessários.</span><span data-lang="es"> Los datos y sistemas están accesibles cuando son necesarios.</span></li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <h3 class="font-bold text-xl mb-4">
+                        <span data-lang="pt">Melhores Práticas de Segurança Digital</span>
+                        <span data-lang="es">Mejores Prácticas de Seguridad Digital</span>
+                    </h3>
+                    <ol class="space-y-2 list-decimal list-inside text-gray-700">
+                        <li><b data-lang="pt">Senhas Fortes:</b><b data-lang="es">Contraseñas Fuertes:</b><span data-lang="pt"> Complexas e únicas para cada serviço.</span><span data-lang="es"> Complejas y únicas para cada servicio.</span></li>
+                        <li><b data-lang="pt">Autenticação de Dois Fatores (2FA):</b><b data-lang="es">Autenticación de Dos Factores (2FA):</b><span data-lang="pt"> Camada extra de segurança.</span><span data-lang="es"> Capa extra de seguridad.</span></li>
+                        <li><b data-lang="pt">Atualizações de Software:</b><b data-lang="es">Actualizaciones de Software:</b><span data-lang="pt"> Mantenha sistemas e apps atualizados.</span><span data-lang="es"> Mantén sistemas y apps actualizados.</span></li>
+                        <li><b data-lang="pt">Reconhecer Phishing:</b><b data-lang="es">Reconocer Phishing:</b><span data-lang="pt"> Cuidado com e-mails e mensagens suspeitas.</span><span data-lang="es"> Cuidado con correos electrónicos y mensajes sospechosos.</span></li>
+                        <li><b data-lang="pt">Backup de Dados:</b><b data-lang="es">Copia de Seguridad de Datos:</b><span data-lang="pt"> Mantenha cópias dos seus arquivos importantes.</span><span data-lang="es"> Mantén copias de tus archivos importantes.</span></li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção 6: Quiz -->
+        <section id="section-quiz">
+            <div data-lang="pt">
+                <h2 class="text-3xl font-bold mb-2 text-blue-600">Teste seus Conhecimentos</h2>
+                <p class="mb-6 text-lg text-gray-600">Agora é hora de praticar! Responda às perguntas abaixo para revisar o conteúdo da aula e verificar seu aprendizado.</p>
+            </div>
+             <div data-lang="es">
+                <h2 class="text-3xl font-bold mb-2 text-blue-600">Pon a Prueba tus Conocimientos</h2>
+                <p class="mb-6 text-lg text-gray-600">¡Ahora es el momento de practicar! Responde a las preguntas a continuación para repasar el contenido de la clase y comprobar tu aprendizaje.</p>
+            </div>
+            <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg">
+                <form id="quizForm" class="space-y-8">
+                    <div id="quiz-container" class="space-y-6"></div>
+                    <div class="flex flex-col items-center">
+                        <button type="submit" class="bg-blue-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-700 transition-colors text-lg">
+                            <span data-lang="pt">Verificar Respostas</span>
+                            <span data-lang="es">Verificar Respuestas</span>
+                        </button>
+                         <div id="quiz-results" class="mt-6 text-2xl font-bold text-center"></div>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const langPtBtn = document.getElementById('lang-pt');
+            const langEsBtn = document.getElementById('lang-es');
+            let currentLang = 'pt';
+
+            const quizData = {
+                pt: [
+                    // Editores de Texto (6 questões)
+                    { q: "Qual a principal função de um editor de texto?", o: ["Realizar cálculos complexos.", "Criar e formatar documentos de texto.", "Gerenciar bancos de dados."], a: 1 },
+                    { q: "Qual recurso permite aplicar rapidamente um conjunto predefinido de formatação?", o: ["Mala Direta.", "Controle de Alterações.", "Estilos."], a: 2 },
+                    { q: "Para que servem os Cabeçalhos e Rodapés?", o: ["Para adicionar uma lista de compras.", "Para repetir informações como número de página.", "Para inserir imagens de forma aleatória."], a: 1 },
+                    { q: "Qual a vantagem de usar o recurso 'Controle de Alterações'?", o: ["Aumentar a velocidade de digitação.", "Rastrear e gerenciar edições feitas por diferentes usuários.", "Inserir tabelas automaticamente."], a: 1 },
+                    { q: "Em um editor de texto, o que é um 'Sumário Automático'?", o: ["Um recurso para resumir o texto digitado automaticamente.", "Uma tabela de conteúdo gerada automaticamente com base nos títulos do documento.", "Um dicionário de sinônimos automático."], a: 1 },
+                    { q: "Qual o propósito da 'Mala Direta'?", o: ["Enviar e-mails em massa sem personalização.", "Criar documentos personalizados em massa usando uma fonte de dados.", "Organizar fotos em álbuns digitais."], a: 1 },
+
+                    // Editores de Planilhas (6 questões)
+                    { q: "Qual sinal inicia uma fórmula em uma planilha?", o: ["#", "=", "$"], a: 1 },
+                    { q: "Qual função é usada para calcular a soma de um intervalo?", o: ["MÉDIA()", "SOMA()", "CONTAR()"], a: 1 },
+                    { q: "O que a 'Formatação Condicional' permite fazer?", o: ["Colorir células aleatoriamente.", "Aplicar formatação com base em regras.", "Converter números em texto."], a: 1 },
+                    { q: "Para que serve a 'Validação de Dados' em uma planilha?", o: ["Para corrigir erros de digitação automaticamente.", "Para restringir o tipo ou os valores que podem ser inseridos em uma célula.", "Para proteger a planilha com senha."], a: 1 },
+                    { q: "Qual o termo para um conjunto de múltiplas folhas de trabalho dentro de um mesmo arquivo de planilha?", o: ["Documento de Texto.", "Pasta de Trabalho.", "Apresentação de Slides."], a: 1 },
+                    { q: "Qual ferramenta é poderosa para resumir e analisar grandes volumes de dados de forma flexível em planilhas?", o: ["Editor de Imagens.", "Tabela Dinâmica.", "Bloco de Notas."], a: 1 },
+
+                    // Criação de Gráficos (6 questões)
+                    { q: "Qual é a principal vantagem de usar gráficos para representar dados?", o: ["Ocupam menos espaço no documento.", "Tornam dados complexos mais fáceis de entender visualmente.", "Permitem editar o texto do documento."], a: 1 },
+                    { q: "Qual tipo de gráfico é ideal para mostrar a proporção de cada parte em relação ao todo?", o: ["Gráfico de Linhas.", "Gráfico de Pizza / Setores.", "Gráfico de Barras."], a: 1 },
+                    { q: "Se você deseja visualizar tendências de vendas ao longo dos meses, qual o tipo de gráfico mais adequado?", o: ["Gráfico de Pizza.", "Gráfico de Linhas.", "Gráfico de Dispersão."], a: 1 },
+                    { q: "O que é uma 'Legenda' em um gráfico?", o: ["O título principal.", "Identifica as diferentes séries de dados.", "A fonte dos dados."], a: 1 },
+                    { q: "Qual elemento do gráfico descreve o que os valores no eixo horizontal ou vertical representam?", o: ["Título do Gráfico.", "Rótulos de Dados.", "Títulos dos Eixos."], a: 2 },
+                    { q: "É aconselhável usar um gráfico de pizza com muitos setores?", o: ["Sim, quanto mais setores, melhor.", "Não, pode dificultar a leitura e compreensão do gráfico.", "Apenas se os setores forem de cores muito vibrantes."], a: 1 },
+
+                    // IA e Criação de Conteúdo (6 questões)
+                    { q: "Qual o principal benefício da IA na criação de conteúdo?", o: ["Substituir completamente a escrita humana.", "Gerar ideias e rascunhos rapidamente.", "Apenas corrigir erros gramaticais."], a: 1 },
+                    { q: "O que são 'prompts' no contexto de IA?", o: ["Programas de computador para desenhar imagens.", "Instruções que você dá à inteligência artificial.", "Ferramentas para organizar documentos."], a: 1 },
+                    { q: "Qual característica de um bom prompt garante que a IA entenda o que é esperado?", o: ["Ser muito curto.", "Ser claro e específico.", "Ter muitas palavras aleatórias."], a: 1 },
+                    { q: "Além de rascunhos, a IA pode auxiliar na criação de conteúdo com o que?", o: ["Criação de hardware.", "Edição de vídeos profissionais.", "Resumos e traduções de textos."], a: 2 },
+                    { q: "Para que serve especificar a 'persona' em um prompt?", o: ["Para a IA saber quem você é.", "Para a IA adotar um tom e estilo de escrita adequados.", "Para definir a data de entrega do conteúdo."], a: 1 },
+                    { q: "Qual destes NÃO é um auxílio da IA na criação de conteúdo?", o: ["Otimização de SEO.", "Geração de ideias.", "Substituição completa do pensamento crítico humano."], a: 2 },
+
+                    // Segurança Digital (6 questões)
+                    { q: "Qual pilar da segurança da informação garante que os dados são precisos e protegidos contra modificações não autorizadas?", o: ["Confidencialidade.", "Integridade.", "Disponibilidade."], a: 1 },
+                    { q: "O que significa 'Confidencialidade' na segurança da informação?", o: ["Dados sempre disponíveis.", "Apenas usuários autorizados podem acessar os dados.", "Dados protegidos contra vírus."], a: 1 },
+                    { q: "Qual é uma das melhores práticas para proteger suas contas online?", o: ["Usar a mesma senha para tudo.", "Usar senhas fortes e únicas.", "Compartilhar suas senhas com amigos."], a: 1 },
+                    { q: "A autenticação de dois fatores (2FA) adiciona o que à segurança de uma conta?", o: ["Apenas uma confirmação por e-mail.", "Uma camada extra de segurança, geralmente com um segundo dispositivo.", "Um link para resetar a senha."], a: 1 },
+                    { q: "Por que é importante manter o software sempre atualizado?", o: ["Para mudar a cor da interface.", "Para garantir compatibilidade com jogos.", "Para corrigir falhas de segurança e melhorar o desempenho."], a: 2 },
+                    { q: "Qual o propósito do 'Backup de Dados'?", o: ["Para ocupar espaço no disco rígido.", "Para ter cópias de segurança de arquivos importantes em caso de perda.", "Para acelerar o computador."], a: 1 }
+                ],
+                es: [
+                    // Editores de Texto (6 preguntas)
+                    { q: "¿Cuál es la función principal de un editor de texto?", o: ["Realizar cálculos complejos.", "Crear y formatear documentos de texto.", "Administrar bases de datos."], a: 1 },
+                    { q: "¿Qué función permite aplicar rápidamente un conjunto predefinido de formato?", o: ["Combinación de Correspondencia.", "Control de Cambios.", "Estilos."], a: 2 },
+                    { q: "¿Para qué sirven los Encabezados y Pies de Página?", o: ["Para añadir una lista de la compra.", "Para repetir información como el número de página.", "Para insertar imágenes de forma aleatoria."], a: 1 },
+                    { q: "¿Cuál es la ventaja de usar la función 'Control de Cambios'?", o: ["Aumentar la velocidad de escritura.", "Rastrear y gestionar las ediciones realizadas por diferentes usuarios.", "Insertar tablas automáticamente."], a: 1 },
+                    { q: "En un editor de texto, ¿qué es una 'Tabla de Contenidos Automática'?", o: ["Una función para resumir el texto escrito automáticamente.", "Una tabla de contenidos generada automáticamente basada en los títulos del documento.", "Un diccionario de sinónimos automático."], a: 1 },
+                    { q: "¿Cuál es el propósito de la 'Combinación de Correspondencia'?", o: ["Enviar correos electrónicos masivos sin personalización.", "Crear documentos personalizados masivos utilizando una fuente de datos.", "Organizar fotos en álbumes digitales."], a: 1 },
+
+                    // Editores de Hojas de Cálculo (6 preguntas)
+                    { q: "¿Qué signo inicia una fórmula en una hoja de cálculo?", o: ["#", "=", "$"], a: 1 },
+                    { q: "¿Qué función se utiliza para calcular la suma de un rango?", o: ["PROMEDIO()", "SUMA()", "CONTAR()"], a: 1 },
+                    { q: "¿Qué permite hacer el 'Formato Condicional'?", o: ["Colorear celdas aleatoriamente.", "Aplicar formato basado en reglas.", "Convertir números a texto."], a: 1 },
+                    { q: "¿Para qué sirve la 'Validación de Datos' en una hoja de cálculo?", o: ["Para corregir errores de escritura automáticamente.", "Para restringir el tipo o los valores que pueden introducirse en una celda.", "Para proteger la hoja de cálculo con contraseña."], a: 1 },
+                    { q: "¿Cuál es el término para un conjunto de múltiples hojas de trabajo dentro de un mismo archivo de hoja de cálculo?", o: ["Documento de Texto.", "Libro de Trabajo.", "Presentación de Diapositivas."], a: 1 },
+                    { q: "¿Qué herramienta es poderosa para resumir y analizar grandes volúmenes de datos de forma flexible en hojas de cálculo?", o: ["Editor de Imágenes.", "Tabla Dinámica.", "Bloc de Notas."], a: 1 },
+
+                    // Creación de Gráficos (6 preguntas)
+                    { q: "¿Cuál es la principal ventaja de usar gráficos para representar datos?", o: ["Ocupan menos espacio en el documento.", "Hacen que los datos complejos sean más fáciles de entender visualmente.", "Permiten editar el texto del documento."], a: 1 },
+                    { q: "¿Qué tipo de gráfico es ideal para mostrar la proporción de cada parte en relación con el todo?", o: ["Gráfico de Líneas.", "Gráfico Circular / de Sectores.", "Gráfico de Barras."], a: 1 },
+                    { q: "Si deseas visualizar tendencias de ventas a lo largo del tiempo, ¿qué gráfico usar?", o: ["Gráfico Circular.", "Gráfico de Líneas.", "Gráfico de Dispersión."], a: 1 },
+                    { q: "¿Qué es una 'Leyenda' en un gráfico?", o: ["El título principal.", "Identifica las diferentes series de datos.", "La fuente de los datos."], a: 1 },
+                    { q: "¿Qué elemento del gráfico describe lo que representan los valores en el eje horizontal o vertical?", o: ["Título del Gráfico.", "Etiquetas de Datos.", "Títulos de los Ejes."], a: 2 },
+                    { q: "¿Es aconsejable usar un gráfico circular con muchos sectores?", o: ["Sí, cuantos más sectores, mejor.", "No, puede dificultar la lectura y comprensión del gráfico.", "Solo si los sectores son de colores muy vibrantes."], a: 1 },
+
+                    // IA y Creación de Contenido (6 preguntas)
+                    { q: "¿Cuál es el principal beneficio de la IA en la creación de contenido?", o: ["Sustituir completamente la escritura humana.", "Generar ideas y borradores rápidamente.", "Solo corregir errores gramaticales."], a: 1 },
+                    { q: "¿Qué son los 'prompts' en el contexto de la IA?", o: ["Programas de ordenador para dibujar imágenes.", "Instrucciones que le das a la inteligencia artificial.", "Herramientas para organizar documentos."], a: 1 },
+                    { q: "¿Qué característica de un buen prompt asegura que la IA entienda lo que se espera?", o: ["Ser muy corto.", "Ser claro y específico.", "Tener muchas palabras aleatorias."], a: 1 },
+                    { q: "Además de borradores, ¿la IA puede ayudar en la creación de contenido con qué?", o: ["Creación de hardware.", "Edición de videos profesionales.", "Resúmenes y traducciones de textos."], a: 2 },
+                    { q: "¿Para qué sirve especificar la 'persona' en un prompt?", o: ["Para que la IA sepa quién eres.", "Para que la IA adopte un tono y estilo de escritura adecuados.", "Para definir la fecha de entrega del contenido."], a: 1 },
+                    { q: "¿Cuál de estos NO es una ayuda de la IA en la creación de contenido?", o: ["Optimización de SEO.", "Generación de ideas.", "Sustitución completa del pensamiento crítico humano."], a: 2 },
+
+                    // Seguridad Digital (6 preguntas)
+                    { q: "¿Qué pilar de la seguridad de la información garantiza que los datos son precisos y están protegidos contra modificaciones no autorizadas?", o: ["Confidencialidad.", "Integridad.", "Disponibilidad."], a: 1 },
+                    { q: "¿Qué significa 'Confidencialidad' en la seguridad de la información?", o: ["Datos siempre disponibles.", "Solo usuarios autorizados pueden acceder a los datos.", "Datos protegidos contra virus."], a: 1 },
+                    { q: "¿Cuál es una de las mejores prácticas para proteger tus cuentas en línea?", o: ["Usar la misma contraseña para todo.", "Usar contraseñas fuertes y únicas.", "Compartir tus contraseñas con amigos."], a: 1 },
+                    { q: "La autenticación de dos factores (2FA) ¿qué añade a la seguridad de una cuenta?", o: ["Solo una confirmación por correo electrónico.", "Una capa extra de seguridad, generalmente con un segundo dispositivo.", "Un enlace para restablecer la contraseña."], a: 1 },
+                    { q: "¿Por qué es importante mantener el software siempre actualizado?", o: ["Para cambiar el color de la interfaz.", "Para garantizar la compatibilidad con juegos.", "Para corregir fallos de seguridad y mejorar el rendimiento."], a: 2 },
+                    { q: "¿Cuál es el propósito de la 'Copia de Seguridad de Datos'?", o: ["Para ocupar espacio en el disco duro.", "Para tener copias de seguridad de archivos importantes en caso de pérdida.", "Para acelerar el ordenador."], a: 1 }
+                ]
+            };
+            
+            const totalQuestions = 30; // Total de questões no quiz
+
+            const setLanguage = (lang) => {
+                currentLang = lang;
+                document.documentElement.lang = lang;
+                document.querySelectorAll('[data-lang]').forEach(el => {
+                    el.style.display = el.dataset.lang === lang ? '' : 'none';
+                });
+                langPtBtn.classList.toggle('active-lang', lang === 'pt');
+                langEsBtn.classList.toggle('active-lang', lang === 'es');
+                renderQuiz();
+                if (window.salesChart instanceof Chart) {
+                   window.salesChart.destroy();
+                }
+                renderChart();
+            };
+
+            const shuffleArray = (array) => {
+                const newArr = [...array];
+                for (let i = newArr.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
+                }
+                return newArr;
+            };
+
+            const renderQuiz = () => {
+                const container = document.getElementById('quiz-container');
+                container.innerHTML = '';
+                
+                // Shuffle all questions available for the current language
+                const shuffledQuestions = shuffleArray(quizData[currentLang]);
+                
+                // Take only the desired number of questions
+                const questionsToRender = shuffledQuestions.slice(0, totalQuestions);
+
+                questionsToRender.forEach((item, index) => {
+                    const originalOptions = item.o.map((option, i) => ({ text: option, originalIndex: i }));
+                    const shuffledOptions = shuffleArray(originalOptions); // Shuffle options for each question
+
+                    const optionsHtml = shuffledOptions.map(opt => `
+                        <label class="quiz-option block border-2 border-gray-300 p-4 rounded-lg hover:bg-gray-100 cursor-pointer transition-colors">
+                            <input type="radio" name="question-${index}" value="${opt.originalIndex}" class="mr-3">
+                            ${opt.text}
+                        </label>
+                    `).join('');
+
+                    const questionHtml = `
+                        <div class="question-block" data-correct-answer="${item.a}">
+                            <p class="font-semibold text-lg mb-4">${index + 1}. ${item.q}</p>
+                            <div class="space-y-3">${optionsHtml}</div>
+                        </div>
+                    `;
+                    container.innerHTML += questionHtml;
+                });
+                document.getElementById('quiz-results').innerHTML = '';
+            };
+
+            const quizForm = document.getElementById('quizForm');
+            quizForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                let score = 0;
+                const questionBlocks = document.querySelectorAll('.question-block');
+
+                questionBlocks.forEach((block, index) => {
+                    const correctAnswer = parseInt(block.dataset.correctAnswer);
+                    const selectedRadio = block.querySelector(`input[name="question-${index}"]:checked`);
+                    
+                    block.querySelectorAll('.quiz-option').forEach(label => {
+                        label.classList.remove('correct', 'incorrect');
+                    });
+                    
+                    if (selectedRadio) {
+                        const userAnswer = parseInt(selectedRadio.value);
+                        if (userAnswer === correctAnswer) {
+                            score++;
+                            selectedRadio.parentElement.classList.add('correct');
+                        } else {
+                            selectedRadio.parentElement.classList.add('incorrect');
+                            const correctLabel = block.querySelector(`input[value="${correctAnswer}"]`).parentElement;
+                            correctLabel.classList.add('correct');
+                        }
+                    } else {
+                        const correctLabel = block.querySelector(`input[value="${correctAnswer}"]`).parentElement;
+                        correctLabel.classList.add('correct');
+                    }
+                });
+
+                const resultsDiv = document.getElementById('quiz-results');
+                const resultText = currentLang === 'pt' ? `Você acertou ${score} de ${totalQuestions}!` : `¡Acertaste ${score} de ${totalQuestions}!`;
+                resultsDiv.textContent = resultText;
+            });
+            
+            const renderChart = () => {
+                const ctx = document.getElementById('salesChart').getContext('2d');
+                const labels = currentLang === 'pt' ? ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'] : ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'];
+                const data = {
+                    labels: labels,
+                    datasets: [{
+                        label: currentLang === 'pt' ? 'Vendas (em milhares)' : 'Ventas (en miles)',
+                        data: [100, 120, 90, 150, 130, 180],
+                        backgroundColor: 'rgba(59, 130, 246, 0.6)',
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        borderWidth: 1,
+                        borderRadius: 5,
+                    }]
+                };
+                window.salesChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: data,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: { beginAtZero: true }
+                        },
+                        plugins: {
+                            legend: { position: 'top' },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed.y !== null) {
+                                            label += new Intl.NumberFormat('de-DE').format(context.parsed.y * 1000);
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            };
+
+            langPtBtn.addEventListener('click', () => setLanguage('pt'));
+            langEsBtn.addEventListener('click', () => setLanguage('es'));
+
+            // Smooth scroll for navigation links
+            document.querySelectorAll('nav a').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+
+            setLanguage('pt');
+        });
+    </script>
+
+</body>
+</html>
